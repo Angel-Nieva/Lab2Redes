@@ -12,6 +12,7 @@ from funciones.modulacion import fourier_transform, am_modulation, am_demodulati
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io.wavfile as waves
+from scipy.signal import hilbert
 # -----------------------------------------------------------
 audio = './audio/handel.wav'
 
@@ -112,34 +113,28 @@ plt.xlim(-4200, 4200)
 plt.show()
 # ------------------------- Modulacion FM ----------------------------------#
 
-tiempo_resample = np.linspace(0,int(tiempo),int(carrier_freq*tiempo))
-port_resample = np.linspace(0,int(carrier_freq),int(carrier_freq*tiempo))
-
-
 # Con k = 1
-fm_10 = fm_modulation(audio, modulation_freq, t, resampling_time, 1)
-fm_10_tf, fm_10_freq = fourier_transform(fm_10, largo * 10, T * 0.1)
+fm = fm_modulation(audio, modulation_freq, t, resampling_time, 1)
+fm_tf, fm_freq = fourier_transform(fm, largo * 10, T * 0.1)
 
-graficar("Grafico 8.1: Señal modulada zoom - FM 10[kHz]", resampling_time, fm_10, "Tiempo [s]", "Amplitud")
+graficar("Grafico 8.1: Señal modulada zoom - FM 10[kHz]", resampling_time, fm, "Tiempo [s]", "Amplitud")
 plt.xlim(0, 0.01)
-graficar("Grafico 8.2: Transformada de Fourier - FM", fm_10_freq, np.abs(fm_10_tf), "Frecuencia [Hz]", "Amplitud")
+graficar("Grafico 8.2: Transformada de Fourier - FM", fm_freq, np.abs(fm_tf), "Frecuencia [Hz]", "Amplitud")
 plt.show()
 
-fm_20 = fm_modulation(audio, 20000, t, resampling_time, 1)
-fm_20_tf, fm_20_freq = fourier_transform(fm_20, largo * 10, T * 0.1)
+fm_1 = fm_modulation(audio, 20000, t, resampling_time, 1)
+fm_1_tf, fm_1_freq = fourier_transform(fm_1, largo * 10, T * 0.1)
 
-graficar("Grafico 9.1: Señal modulada zoom - FM 20[kHz]", resampling_time, fm_20, "Tiempo [s]", "Amplitud")
+graficar("Grafico 9.1: Señal modulada zoom - FM 20[kHz]", resampling_time, fm_1, "Tiempo [s]", "Amplitud")
 plt.xlim(0, 0.01)
-graficar("Grafico 9.2: Transformada de Fourier - FM", fm_20_freq, np.abs(fm_20_tf), "Frecuencia [Hz]", "Amplitud")
+graficar("Grafico 9.2: Transformada de Fourier - FM", fm_1_freq, np.abs(fm_1_tf), "Frecuencia [Hz]", "Amplitud")
 plt.show()
 
+# Con k = 2
+fm_2 = fm_modulation(audio, 20000, t, resampling_time, 1.25)
+fm_2_tf, fm_2_freq = fourier_transform(fm_2, largo * 10, T * 0.1)
 
-dx = resampling_time[1]-resampling_time[0]
-derivada = np.gradient(fm_20, dx)
-
-fm_der_tf, fm_der_freq = fourier_transform(derivada, largo * 10, T * 0.1)
-graficar("Grafico 10.1: Señal FM derivada - FM 20[kHz]", resampling_time, derivada, "Tiempo [s]", "Amplitud")
-graficar("Grafico 10.2: Transformada de Fourier derivada - FM", fm_der_freq, np.abs(fm_der_tf), "Frecuencia [Hz]", "Amplitud")
-plt.xlim(-100000, 100000)
+graficar("Grafico 10.1: Señal modulada zoom - FM 20[kHz]", resampling_time, fm_2, "Tiempo [s]", "Amplitud")
+plt.xlim(0, 0.01)
+graficar("Grafico 10.2: Transformada de Fourier - FM", fm_2_freq, np.abs(fm_2_tf), "Frecuencia [Hz]", "Amplitud")
 plt.show()
-
